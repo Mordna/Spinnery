@@ -134,7 +134,7 @@ public class WSlot extends WAbstractWidget {
 	}
 
 	public boolean accepts(ItemStack... stacks) {
-		if (!(Arrays.stream(stacks).allMatch(stack -> getLinkedInventory().isValidInvStack(slotNumber, stack)))) {
+		if (!(Arrays.stream(stacks).allMatch(stack -> getLinkedInventory().isValid(slotNumber, stack)))) {
 			return false;
 		}
 		if (isWhitelist) {
@@ -347,7 +347,7 @@ public class WSlot extends WAbstractWidget {
 
 	public ItemStack getStack() {
 		try {
-			ItemStack stackA = getLinkedInventory().getInvStack(getSlotNumber());
+			ItemStack stackA = getLinkedInventory().getStack(getSlotNumber());
 			;
 			if (!isOverrideMaximumCount()) {
 				setMaximumCount(stackA.getMaxCount());
@@ -372,7 +372,7 @@ public class WSlot extends WAbstractWidget {
 
 	public <W extends WSlot> W setStack(ItemStack stack) {
 		try {
-			getLinkedInventory().setInvStack(slotNumber, stack);
+			getLinkedInventory().setStack(slotNumber, stack);
 			if (!isOverrideMaximumCount()) {
 				setMaximumCount(stack.getMaxCount());
 			}

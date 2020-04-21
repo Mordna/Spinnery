@@ -4,7 +4,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.ContainerScreen;
+import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -17,7 +18,7 @@ import spinnery.widget.api.WCollection;
 import spinnery.widget.api.WContextLock;
 import spinnery.widget.api.WInterfaceProvider;
 
-public class BaseContainerScreen<T extends BaseContainer> extends ContainerScreen<T> implements WInterfaceProvider {
+public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<T> implements WInterfaceProvider {
 	protected final WInterface clientInterface;
 	protected int tooltipX = 0;
 	protected int tooltipY = 0;
@@ -188,7 +189,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 		if (keyCode == GLFW.GLFW_KEY_ESCAPE || MinecraftClient.getInstance().options.keyInventory.matchesKey(keyCode, character)) {
 			if (clientInterface.getAllWidgets().stream().noneMatch(widget -> widget instanceof WContextLock && ((WContextLock) widget).isActive())) {
-				MinecraftClient.getInstance().player.closeContainer();
+				MinecraftClient.getInstance().player.closeHandledScreen();
 				return true;
 			}
 		}
@@ -251,7 +252,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	 */
 	@Environment(EnvType.CLIENT)
 	public T getContainer() {
-		return super.container;
+		return super.handler;
 	}
 
 	/**

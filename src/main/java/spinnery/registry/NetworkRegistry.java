@@ -7,8 +7,8 @@ import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.PacketByteBuf;
 import spinnery.common.BaseContainer;
 import spinnery.util.StackUtilities;
 import spinnery.widget.WAbstractWidget;
@@ -182,8 +182,8 @@ public class NetworkRegistry {
 			Action action = packetByteBuffer.readEnumConstant(Action.class);
 
 			packetContext.getTaskQueue().execute(() -> {
-				if (packetContext.getPlayer().container instanceof BaseContainer && packetContext.getPlayer().container.syncId == syncId) {
-					((BaseContainer) packetContext.getPlayer().container).onSlotAction(slotNumber, inventoryNumber, button, action, packetContext.getPlayer());
+				if (packetContext.getPlayer().currentScreenHandler instanceof BaseContainer && packetContext.getPlayer().currentScreenHandler.syncId == syncId) {
+					((BaseContainer) packetContext.getPlayer().currentScreenHandler).onSlotAction(slotNumber, inventoryNumber, button, action, packetContext.getPlayer());
 				}
 			});
 		});
@@ -195,8 +195,8 @@ public class NetworkRegistry {
 			Action action = packetByteBuffer.readEnumConstant(Action.class);
 
 			packetContext.getTaskQueue().execute(() -> {
-				if (packetContext.getPlayer().container instanceof BaseContainer && packetContext.getPlayer().container.syncId == syncId) {
-					((BaseContainer) packetContext.getPlayer().container).onSlotDrag(slotNumbers, inventoryNumbers, action);
+				if (packetContext.getPlayer().currentScreenHandler instanceof BaseContainer && packetContext.getPlayer().currentScreenHandler.syncId == syncId) {
+					((BaseContainer) packetContext.getPlayer().currentScreenHandler).onSlotDrag(slotNumbers, inventoryNumbers, action);
 				}
 			});
 		}));
@@ -206,8 +206,8 @@ public class NetworkRegistry {
 			WNetworked.Event event = packetByteBuf.readEnumConstant(WNetworked.Event.class);
 			CompoundTag payload = packetByteBuf.readCompoundTag();
 			packetContext.getTaskQueue().execute(() -> {
-				if (packetContext.getPlayer().container instanceof BaseContainer) {
-					((BaseContainer) packetContext.getPlayer().container).onInterfaceEvent(widgetSyncId, event, payload);
+				if (packetContext.getPlayer().currentScreenHandler instanceof BaseContainer) {
+					((BaseContainer) packetContext.getPlayer().currentScreenHandler).onInterfaceEvent(widgetSyncId, event, payload);
 				}
 			});
 		});
@@ -223,14 +223,14 @@ public class NetworkRegistry {
 					ItemStack stack = StackUtilities.read(tag);
 
 					packetContext.getTaskQueue().execute(() -> {
-						if (packetContext.getPlayer().container instanceof BaseContainer && packetContext.getPlayer().container.syncId == syncId) {
-							BaseContainer container = (BaseContainer) packetContext.getPlayer().container;
+						if (packetContext.getPlayer().currentScreenHandler instanceof BaseContainer && packetContext.getPlayer().currentScreenHandler.syncId == syncId) {
+							BaseContainer container = (BaseContainer) packetContext.getPlayer().currentScreenHandler;
 
-							container.getInventory(inventoryNumber).setInvStack(slotNumber, stack);
+							container.getInventory(inventoryNumber).setStack(slotNumber, stack);
 
 							for (WAbstractWidget widget : container.getInterface().getAllWidgets()) {
 								if (widget instanceof WSlot && ((WSlot) widget).getInventoryNumber() == inventoryNumber && ((WSlot) widget).getSlotNumber() == slotNumber) {
-									((WSlot) widget).setStack(container.getInventory(inventoryNumber).getInvStack(slotNumber));
+									((WSlot) widget).setStack(container.getInventory(inventoryNumber).getStack(slotNumber));
 								}
 							}
 						}
