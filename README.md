@@ -1,3 +1,15 @@
+# A fork of Spinnery for 1.16.x
+See bottom text for information about Spinnery
+
+## Changes
+- 20w16a support
+- Added abillity to (manually) test Spinnery with gradle arg '-PaddTestGUIs'
+
+## Testing
+Running `./gradlew runClient -PaddTestGUIs` results in the following changes:
+* Backpack item with basic container/screen usage & sync
+* `/spinnery test <screen>` command for testing (client-only) screens 
+
 # Spinnery, ahoy!
 
 [ ![Download](https://api.bintray.com/packages/spinnery/Spinnery/spinnery/images/download.svg) ](https://bintray.com/spinnery/Spinnery/spinnery/_latestVersion)
